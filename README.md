@@ -37,7 +37,7 @@ Use '.quit' to quit, or '.help' for help
 >>
 ```
 
-Once in the REPL, any valid [stitch syntax](docs/language-notes.md) can be entered.
+Once in the REPL, any valid [stitch syntax](doc/language-notes.md) can be entered.
 
 ## Goals for stitch CLI
 In order to help build working stitch definitions
