@@ -71,7 +71,7 @@ func Analyze(tree *ast.ASTree) (*SymbolTable, error) {
 		if tpe, err := analyzeStatement(stmt, table); err != nil {
 			return nil, err
 		} else {
-			fmt.Printf("%s => %s\n", stmt, typeStrings[tpe])
+			fmt.Printf("ANALYSIS: %s => %s\n", stmt, typeStrings[tpe])
 		}
 	}
 	return nil, nil
@@ -93,7 +93,7 @@ func analyzeStatement(stmt ast.Statement, symTable *SymbolTable) (StitchType, er
 	case *ast.CommentStatement:
 		return TypeUnknown, nil
 	default:
-		fmt.Printf("Unknown statement type\n")
+		fmt.Printf("ANALYSIS: Unknown statement type\n")
 	}
 	return TypeUnknown, nil
 }

@@ -232,11 +232,11 @@ func (r *Repl) ExecuteCode(reader io.Reader) error {
 			fmt.Printf("   %s\n", e)
 		}
 	} else {
-		//if obj, err := r.evaluator.EvalProgram(prog, r.env); err != nil {
-		//	fmt.Printf("ERROR: %s\n", err.Error())
-		//} else if obj != nil && !r.quiet {
-		//	fmt.Printf("%s\n", obj.Inspect())
-		//}
+		if obj, err := r.evaluator.EvalProgram(prog, r.env); err != nil {
+			fmt.Printf("ERROR: %s\n", err.Error())
+		} else if obj != nil && !r.quiet {
+			fmt.Printf("%s\n", obj.Inspect())
+		}
 	}
 	return nil
 }

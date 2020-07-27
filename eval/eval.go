@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 
+	"github.com/nirosys/stitch"
 	"github.com/nirosys/stitch/ast"
 	"github.com/nirosys/stitch/object"
 
@@ -580,10 +581,9 @@ func extendFunctionEnv(fn *object.Function, args []object.Object) *object.Enviro
 	return env
 }
 
-/*
-func (e *Evaluator) EvalProgram(prog *ast.Program, env *object.Environment) (object.Object, error) {
+func (e *Evaluator) EvalProgram(prog *stitch.Program, env *object.Environment) (object.Object, error) {
 	var obj object.Object
-	for _, stmt := range prog.Statements {
+	for _, stmt := range prog.Tree.Statements {
 		if o, err := e.eval(stmt, env); err != nil {
 			return nil, err
 		} else {
@@ -592,7 +592,6 @@ func (e *Evaluator) EvalProgram(prog *ast.Program, env *object.Environment) (obj
 	}
 	return obj, nil
 }
-*/
 
 /*
 func (e *Evaluator) Compile(prog *ast.Program) (*graph.Graph, error) {
