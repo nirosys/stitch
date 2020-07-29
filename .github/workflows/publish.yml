@@ -9,9 +9,13 @@ jobs:
       steps:
          - uses: actions/checkout@v2
 
+         - name: Get Version from Tag
+           id: get_version
+           run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
          # Push Docker Image
          - name: GH Docker Registry
            uses: craftech-io/package-action@v3.1.0
            with:
               access_token: ${{ secrets.GITHUB_TOKEN }}
-              tags: ${{ github.ref }}
+              tags: ${{ steps.get_version.outputs.VERSION }}
