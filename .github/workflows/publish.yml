@@ -1,0 +1,10 @@
+name: Publish to GH Packages
+on: release
+jobs:
+   publish:
+    # Push Docker Image
+    - name: GH Docker Registry
+      uses: craftech-io/package-action@v3.1.0
+      with:
+         access_token: ${{ secrets.GITHUB_TOKEN }}
+         tags: ${{ github.ref }}
