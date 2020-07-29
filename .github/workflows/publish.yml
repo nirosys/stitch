@@ -4,6 +4,8 @@ jobs:
    publish:
       runs-on: ubuntu-latest
       steps:
+         - uses: actions/checkout@v2
+
          # Push Docker Image
          - name: GH Docker Registry
            uses: craftech-io/package-action@v3.1.0
