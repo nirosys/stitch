@@ -540,7 +540,7 @@ func (e *Evaluator) eval(n ast.Node, env *object.Environment) (object.Object, er
 	case *ast.NotExpression:
 		return e.evalNotExpression(t, env)
 	default:
-		return nil, fmt.Errorf("unknown node type: %+T", n)
+		return nil, fmt.Errorf("unknown node type: %T", n)
 	}
 }
 

@@ -52,7 +52,7 @@ type SymbolTable struct {
 
 func (s *SymbolTable) Add(name string, sym *Symbol) error {
 	if _, have := s.symbols[name]; have {
-		return fmt.Errorf("%w: %s", name)
+		return fmt.Errorf("%w: %s", ErrSymbolExists, name)
 	} else {
 		s.symbols[name] = sym
 	}

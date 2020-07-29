@@ -131,7 +131,7 @@ func (n *NodeSlot) Inspect() string {
 }
 
 func (n *NodeSlot) Identifier(name string) (Object, error) {
-	return nil, fmt.Errorf("'%s' not defined for slot type")
+	return nil, fmt.Errorf("'%s' not defined for slot type", name)
 }
 
 func (n *NodeSlot) Connect(obj Connectable) (Object, error) {

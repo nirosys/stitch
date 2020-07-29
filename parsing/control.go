@@ -93,6 +93,10 @@ func (p *Parser) parseBlockExpression() ast.Expression {
 		p.nextToken()
 	}
 
+	if p.curToken.Type == lexing.EOF {
+		return nil
+	}
+
 	if allAssign {
 		maplit := &ast.MapLiteral{Token: block.Token}
 		maplit.Assignments = make([]*ast.AssignmentExpression, 0, len(block.Statements))
