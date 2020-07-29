@@ -1,4 +1,4 @@
-![Build](https://github.com/nirosys/stitch/workflows/Test%20Build%20On%20Push/badge.svg)
+![Build](https://github.com/nirosys/stitch/workflows/Build/badge.svg)
 
 # Stitch Language
 This repository houses a proof-of-concept language for building Flow-based
