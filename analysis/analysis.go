@@ -20,6 +20,7 @@ const (
 	TypeMap      StitchType = 7
 	TypeNodeSlot StitchType = 8
 	TypeFunction StitchType = 9
+	TypeBoolean  StitchType = 10
 )
 
 var typeStrings = map[StitchType]string{
@@ -27,6 +28,7 @@ var typeStrings = map[StitchType]string{
 	TypeInteger:  "INTEGER",
 	TypeFloat:    "FLOAT",
 	TypeString:   "STRING",
+	TypeBoolean:  "BOOL",
 	TypeNode:     "NODE",
 	TypeNodeType: "NODE TYPE",
 	TypeList:     "LIST",
@@ -67,6 +69,13 @@ func NewSymbolTable() *SymbolTable {
 
 func Analyze(tree *ast.ASTree) (*SymbolTable, error) {
 	table := &SymbolTable{symbols: map[string]*Symbol{}}
+	return AnalyzeWithSymbols(tree, table)
+}
+
+func AnalyzeWithSymbols(tree *ast.ASTree, table *SymbolTable) (*SymbolTable, error) {
+	if table == nil {
+		table = NewSymbolTable()
+	}
 	for _, stmt := range tree.Statements {
 		if tpe, err := analyzeStatement(stmt, table); err != nil {
 			return nil, err
@@ -74,7 +83,7 @@ func Analyze(tree *ast.ASTree) (*SymbolTable, error) {
 			fmt.Printf("ANALYSIS: %s => %s\n", stmt, typeStrings[tpe])
 		}
 	}
-	return nil, nil
+	return table, nil
 }
 
 func analyzeStatement(stmt ast.Statement, symTable *SymbolTable) (StitchType, error) {
@@ -108,8 +117,15 @@ func analyzeExpression(exp ast.Expression, symTable *SymbolTable) (StitchType, e
 		return TypeInteger, nil
 	case *ast.StringLiteral:
 		return TypeString, nil
+	case *ast.BoolLiteral:
+		return TypeBoolean, nil
 	case *ast.InfixExpression:
 		return analyzeInfixExpression(t, symTable)
+	case *ast.Identifier:
+		if sym, ok := symTable.symbols[t.Identifier]; ok {
+			return sym.Type, nil
+		}
+		return TypeUnknown, nil
 	default:
 		return TypeUnknown, nil
 	}
@@ -128,7 +144,7 @@ func analyzeInfixExpression(infix *ast.InfixExpression, symTable *SymbolTable) (
 	switch infix.Operator {
 	case "+", "-", "/", "*":
 		if lType != rType {
-			return TypeUnknown, fmt.Errorf("%w: operator '%s' not defined for %d and %d", ErrTypeMismatch, infix.Operator, lType, rType)
+			return TypeUnknown, fmt.Errorf("%w: operator '%s' not defined for %s and %s", ErrTypeMismatch, infix.Operator, typeStrings[lType], typeStrings[rType])
 		}
 		return lType, nil
 	}

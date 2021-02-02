@@ -42,6 +42,24 @@ func NewProgram(r io.Reader) *Program {
 	return prog
 }
 
+func ExtendProgram(prog *Program, r io.Reader) (*Program, error) {
+	parser := parsing.NewParser(r)
+	tree := parser.Parse()
+
+	if symbols, err := analysis.AnalyzeWithSymbols(tree, prog.Symbols); err == nil {
+		if prog.Tree != nil {
+			tree.Statements = append(prog.Tree.Statements, tree.Statements...)
+		}
+		newProg := &Program{
+			Tree:    tree,
+			Symbols: symbols,
+		}
+		return newProg, nil
+	} else {
+		return nil, err
+	}
+}
+
 func (p *Program) String() string {
 	var buffer bytes.Buffer
 	stmts := p.Tree.Statements

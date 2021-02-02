@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/nirosys/stitch"
+	"github.com/nirosys/stitch/analysis"
 	"github.com/nirosys/stitch/cmd/stitch/subcmd/internal"
 	"github.com/nirosys/stitch/cmd/stitch/subcmd/internal/shellcmd"
 	"github.com/nirosys/stitch/eval"
@@ -50,6 +51,7 @@ func NewMatchCounts() MatchCounts {
 type Repl struct {
 	evaluator *eval.Evaluator
 	env       *object.Environment
+	symbols   *analysis.SymbolTable
 	commander *shellcmd.Parser
 	quiet     bool
 	matches   MatchCounts
@@ -225,13 +227,16 @@ func (r *Repl) handleCommands(line string, l *liner.State) (bool, bool) {
 }
 
 func (r *Repl) ExecuteCode(reader io.Reader) error {
-	prog := stitch.NewProgram(reader)
-	if prog == nil {
+	prog := &stitch.Program{Symbols: r.symbols}
+	prog, err := stitch.ExtendProgram(prog, reader)
+	if err != nil {
 		fmt.Printf("Parser error(s):\n")
+		fmt.Printf("   %s\n", err.Error())
 		for _, e := range prog.Errors() {
 			fmt.Printf("   %s\n", e)
 		}
 	} else {
+		r.symbols = prog.Symbols
 		if obj, err := r.evaluator.EvalProgram(prog, r.env); err != nil {
 			fmt.Printf("ERROR: %s\n", err.Error())
 		} else if obj != nil && !r.quiet {
